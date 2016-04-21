@@ -14,6 +14,12 @@ function toggleDone() {
     contentType: "application/json",
     dataType: "json"})
 
+    //.fail(funcion(error){
+  //   console.log(error)
+  // alert("Dit is een pop up box")
+  //
+  // }
+
     .done(function(data) {
       console.log(data);
 
@@ -108,8 +114,25 @@ function submitTodo(event) {
 
 function cleanUpDoneTodos(event) {
   event.preventDefault();
-  $.when($(".completed").remove())
-    .then(updateCounters);
+
+  $.each($(".completed"), function(index, listItem) {
+    $listItem = $(listItem);
+    todoId = $(listItem).data('id');
+    deleteTodo(todoId);
+    $listItem.remove();
+  });
+}
+
+function deleteTodo(todoId) {
+  $.ajax({
+    type: "DELETE",
+    url: "/todos/" + todoId + ".json",
+    contentType: "application/json",
+    dataType: "json"})
+
+    .done(function(data) {
+      updateCounters();
+    });
 }
 
 $(document).ready(function() {
